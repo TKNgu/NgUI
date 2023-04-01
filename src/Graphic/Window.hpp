@@ -2,29 +2,34 @@
 #define Window_hpp
 
 #include <glad/glad.h>
-#define GLFW_EXPOSE_NATIVE_X11
-#define GLFW_EXPOSE_NATIVE_GLX
 #include <GLFW/glfw3.h>
-#ifdef _GLFW_X11
-#include <GLFW/glfw3native.h>
-#endif
+#include <functional>
+#include <vector>
 
-namespace rg::graphic {
-bool InitGLFW();
-
+namespace il012e::graphic {
 class Window {
 public:
-    Window();
+struct EventHandle {
+	int keyCode;
+	std::function<void ()> callBack;
+};
+public:
+    Window(unsigned int = 800, unsigned int = 640);
     ~Window();
-#ifdef _GLFW_X11
-    GLXContext getGLXContext();
-#endif
-    bool isClose();
+	inline bool getIsClose() const {
+    	return glfwWindowShouldClose(this->window);
+	}
     void input();
-    void clear();
-    void render();
+    void clear(float = 0.2f, float = 0.3f, float = 0.3f, float = 1.0f) const;
+	inline void render() const {
+    	glfwSwapBuffers(this->window);
+	}
+	inline void registerEvent(EventHandle event) {
+		this->events.push_back(event);
+	}
 private:
     GLFWwindow *window = nullptr;
+	std::vector<EventHandle> events;
 };
 }
 #endif

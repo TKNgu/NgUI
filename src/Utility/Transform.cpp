@@ -2,7 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace rg::graphic;
+using namespace il012e::utility;
 
 #define UPDATE_MODEL \
     this->model = glm::mat4(1.0f); \

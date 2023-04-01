@@ -43,7 +43,9 @@ include_directories(
 	lib/src/stb/	
 	lib/src/GLM/	
 	src/glad/include/
-	src/Graphic/)
+	src/Graphic/
+	src/Utility/
+	src/Game/)
 
 # Link
 link_directories(local/lib)
@@ -52,6 +54,8 @@ link_directories(local/lib)
 file(GLOB SRC
 	src/glad/src/glad.c
     src/Graphic/*.cpp
+	src/Utility/*.cpp
+	src/Game/*.cpp
 	src/*.cpp)
 
 # Build sample

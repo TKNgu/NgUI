@@ -2,62 +2,42 @@
 #include <stdexcept>
 
 using namespace std;
+using namespace il012e::graphic;
 
-bool rg::graphic::InitGLFW() {
-    if (glfwInit() == GLFW_FALSE) {
-        return false;
-    }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-return true;
-}
-
-void FrameBufferSizeCallback(GLFWwindow *, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-rg::graphic::Window::Window() :
-    window(glfwCreateWindow(800, 600, "Sample", nullptr, nullptr)) {
-    if (this->window == nullptr) {
-        throw runtime_error("Error init window");
-    }
-    glfwSetFramebufferSizeCallback(this->window, FrameBufferSizeCallback);
-
-    glfwMakeContextCurrent(this->window);
+Window::Window(unsigned int width, unsigned int height) {
+	this->window = glfwCreateWindow(width, height, "", nullptr, nullptr);
+	if (!this->window) {
+		throw runtime_error("Error init window");
+	}
+	glfwSetFramebufferSizeCallback(this->window, [](GLFWwindow *, int width, int height) {
+		glViewport(0, 0, width, height);
+	});
+	glfwMakeContextCurrent(this->window);
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+		glfwDestroyWindow(this->window);
         glfwTerminate();
         throw runtime_error("Error init GLAD");
     }
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 }
 
-rg::graphic::Window::~Window() {
-    glfwTerminate();
+Window::~Window() {
+	glfwDestroyWindow(this->window);
 }
 
-#ifdef _GLFW_X11
-GLXContext rg::graphic::Window::getGLXContext() {
-    return glfwGetGLXContext(this->window);
-}
-#endif
-
-bool rg::graphic::Window::isClose() {
-    return glfwWindowShouldClose(this->window);
-}
-
-void rg::graphic::Window::input() {
+void Window::input() {
     glfwPollEvents();
     if (glfwGetKey(this->window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
+	for (auto &event : this->events) {
+		if (glfwGetKey(this->window, event.keyCode) == GLFW_PRESS) {
+			event.callBack();
+		}
+	}
 }
 
-void rg::graphic::Window::clear() {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void rg::graphic::Window::render() {
-    glfwSwapBuffers(this->window);
+void Window::clear(float r, float g, float b, float a) const {
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT);
 }

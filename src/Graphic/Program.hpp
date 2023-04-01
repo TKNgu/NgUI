@@ -2,22 +2,43 @@
 #define Program_hpp
 
 #include <string>
+#include <glm/glm.hpp>
 #include "Shader.hpp"
 
-namespace rg::graphic {
+namespace il012e::graphic {
 class Program {
 public:
-    Program();
-    void attach(Shader &);
+	inline void attach(Shader &shader) {
+	    glAttachShader(this->program, shader.shader);
+	}
+	
     void link();
-    void use() const;
-    void setUniform(std::string, float, float, float, float) const;
-    void setUniform(std::string, bool) const;
-    void setUniform(std::string, int) const;
-    void setUniform(std::string, float) const;
-    void setUniform(std::string, GLfloat *) const;
+	
+	inline void use() const {
+	    glUseProgram(this->program);
+	}
+	
+	inline void setUniform(std::string name, float x, float y, float z, float t) const {
+	    glUniform4f(glGetUniformLocation(this->program, name.c_str()), x, y, z, t);
+	}
+	
+	inline void setUniform(std::string name, bool value) const {
+	    glUniform1i(glGetUniformLocation(this->program, name.c_str()), int(value));
+	}
+	
+	inline void setUniform(std::string name, int value) const {
+	    glUniform1i(glGetUniformLocation(this->program, name.c_str()), value);
+	}
+	
+	inline void setUniform(std::string name, float value) const {
+	    glUniform1f(glGetUniformLocation(this->program, name.c_str()), value);
+	}
+	
+	inline void setUniform(std::string name, GLfloat *value) const {
+	    glUniformMatrix4fv(glGetUniformLocation(this->program, name.c_str()), 1, GL_FALSE, value);
+	}
 private:
-    unsigned int program;
+    unsigned int program = glCreateProgram();
 };
 }
 

@@ -1,20 +1,17 @@
 #include <iostream>
-#include "Window.hpp"
+#include "OpenGL.hpp"
+#include "Game.hpp"
 
 using namespace std;
-using namespace rg::graphic;
+using namespace il012e::graphic;
 
 int main(int, char *[]) {
-    cout << "Hello OpenGL" << endl;
-	if (!InitGLFW()) {
-		cout << "Error int GLFW" << endl;
-		return -1;
+	if (!OpenGL::Init()) {
+		cout << "Error init glfw" << endl;
+		return 1;
 	}
-	Window window;
-	while (!window.isClose()) {
-		window.input();
-		window.clear();
-		window.render();
-	}
-return 0;
+	il012e::game::Game game;
+	game.run();
+	OpenGL::Terminate();
+    return 0;
 }

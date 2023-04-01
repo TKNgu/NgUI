@@ -4,7 +4,7 @@
 #include <string>
 #include <glad/glad.h>
 
-namespace rg::graphic {
+namespace il012e::graphic {
 class Program;
 
 class Shader {

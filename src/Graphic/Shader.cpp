@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <iostream>
 
-using namespace rg::graphic;
+using namespace il012e::graphic;
 using namespace std;
 
 Shader::Shader(string src, GLenum type) : shader(glCreateShader(type)) {
